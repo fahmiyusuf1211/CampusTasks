@@ -120,4 +120,39 @@ class TaskValidatorTest {
         assertTrue(result is CreateTaskResult.Invalid)
     }
 
+    @Test
+    fun idTerlaluPendekMenghasilkanFalse() {
+        val task = Task(
+            id = "AB",
+            title = "Belajar Kotlin",
+            estimatedMinutes = 30
+        )
+
+        assertFalse(TaskValidator.validate(task))
+    }
+
+    @Test
+    fun estimasiWaktuMelebihiBatasMenghasilkanFalse() {
+        val task = Task(
+            id = "T001",
+            title = "Belajar Kotlin",
+            estimatedMinutes = 481
+        )
+
+        assertFalse(TaskValidator.validate(task))
+    }
+
+    @Test
+    fun tagKosongMenghasilkanFalse() {
+        val task = Task(
+            id = "T001",
+            title = "Belajar Kotlin",
+            estimatedMinutes = 30,
+            tags = setOf("Kotlin", "   ")
+        )
+
+        assertFalse(TaskValidator.validate(task))
+    }
+
+
 }

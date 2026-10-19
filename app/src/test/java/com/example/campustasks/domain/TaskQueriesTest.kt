@@ -138,5 +138,28 @@ class TaskQueriesTest {
     }
 
 
+    @Test
+    fun findByIdMengambilTugasDenganIdYangSesuai() {
+        val tasks = listOf(
+            Task(
+                id = "T001",
+                title = "Belajar Kotlin",
+                estimatedMinutes = 30
+            ),
+            Task(
+                id = "T002",
+                title = "Membuat laporan",
+                estimatedMinutes = 45
+            )
+        )
+
+        val result = TaskQueries.findById(tasks, "T002")
+
+        assertEquals("T002", result?.id)
+        assertEquals("Membuat laporan", result?.title)
+    }
+
+
+
 
 }

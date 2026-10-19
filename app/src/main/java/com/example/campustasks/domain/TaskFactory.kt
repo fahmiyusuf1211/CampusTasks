@@ -12,6 +12,7 @@ object TaskFactory {
         tags: Set<String> = emptySet()
     ): CreateTaskResult {
 
+        val normalizedId = id.trim()
         val normalizedTitle = title.trim()
         val normalizedDescription =
             description?.trim()?.takeIf { it.isNotEmpty() }
@@ -20,8 +21,10 @@ object TaskFactory {
             .filter { it.isNotEmpty() }
             .toSet()
 
-        if (id.isBlank()) {
-            return CreateTaskResult.Invalid("ID tidak boleh kosong")
+        if (normalizedId.length !in 3..80) {
+            return CreateTaskResult.Invalid(
+                "ID harus terdiri dari 3 sampai 80 karakter"
+            )
         }
 
         if (normalizedTitle.length !in 3..80) {
@@ -37,7 +40,7 @@ object TaskFactory {
         }
 
         val task = Task(
-            id = id.trim(),
+            id = normalizedId,
             title = normalizedTitle,
             description = normalizedDescription,
             priority = priority,

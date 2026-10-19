@@ -1,3 +1,4 @@
+
 package com.example.campustasks.domain
 
 object TaskQueries {
@@ -13,17 +14,18 @@ object TaskQueries {
         return tasks.filter { it.priority == priority }
     }
 
-
     fun searchByKeyword(
         tasks: List<Task>,
         keyword: String
     ): List<Task> {
         return tasks.filter {
             it.title.contains(keyword, ignoreCase = true) ||
-                    (it.description?.contains(keyword, ignoreCase = true) == true)
+                    (it.description?.contains(
+                        keyword,
+                        ignoreCase = true
+                    ) == true)
         }
     }
-
 
     fun groupByStatus(
         tasks: List<Task>
@@ -31,5 +33,10 @@ object TaskQueries {
         return tasks.groupBy { it.status }
     }
 
-
+    fun <T : Identifiable> findById(
+        items: List<T>,
+        id: String
+    ): T? {
+        return items.find { it.id == id }
+    }
 }

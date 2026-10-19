@@ -27,7 +27,6 @@ class TaskFactoryTest {
         )
 
         assertTrue(result is CreateTaskResult.Success)
-
         if (result is CreateTaskResult.Success) {
             assertEquals("Tugas Kotlin", result.task.title)
         }
@@ -43,7 +42,6 @@ class TaskFactoryTest {
         )
 
         assertTrue(result is CreateTaskResult.Success)
-
         if (result is CreateTaskResult.Success) {
             assertEquals(null, result.task.description)
         }
@@ -59,7 +57,6 @@ class TaskFactoryTest {
         )
 
         assertTrue(result is CreateTaskResult.Success)
-
         if (result is CreateTaskResult.Success) {
             assertEquals(setOf("Kotlin", "AI"), result.task.tags)
         }
@@ -77,6 +74,28 @@ class TaskFactoryTest {
     }
 
     @Test
+    fun judulKosongMenghasilkanInvalid() {
+        val result = TaskFactory.create(
+            id = "T001",
+            title = "   ",
+            estimatedMinutes = 30
+        )
+
+        assertTrue(result is CreateTaskResult.Invalid)
+    }
+
+    @Test
+    fun judulTepatTigaKarakterMenghasilkanSuccess() {
+        val result = TaskFactory.create(
+            id = "T001",
+            title = "ABC",
+            estimatedMinutes = 30
+        )
+
+        assertTrue(result is CreateTaskResult.Success)
+    }
+
+    @Test
     fun judulTerlaluPanjangMenghasilkanInvalid() {
         val result = TaskFactory.create(
             id = "T001",
@@ -85,6 +104,17 @@ class TaskFactoryTest {
         )
 
         assertTrue(result is CreateTaskResult.Invalid)
+    }
+
+    @Test
+    fun estimasiTepatLimaMenitMenghasilkanSuccess() {
+        val result = TaskFactory.create(
+            id = "T001",
+            title = "Tugas Kotlin",
+            estimatedMinutes = 5
+        )
+
+        assertTrue(result is CreateTaskResult.Success)
     }
 
     @Test
@@ -121,6 +151,28 @@ class TaskFactoryTest {
     }
 
     @Test
+    fun idTerlaluPendekMenghasilkanInvalid() {
+        val result = TaskFactory.create(
+            id = "AB",
+            title = "Tugas Kotlin",
+            estimatedMinutes = 30
+        )
+
+        assertTrue(result is CreateTaskResult.Invalid)
+    }
+
+    @Test
+    fun idTerlaluPanjangMenghasilkanInvalid() {
+        val result = TaskFactory.create(
+            id = "A".repeat(81),
+            title = "Tugas Kotlin",
+            estimatedMinutes = 30
+        )
+
+        assertTrue(result is CreateTaskResult.Invalid)
+    }
+
+    @Test
     fun dataValidMempertahankanPriority() {
         val result = TaskFactory.create(
             id = "T001",
@@ -130,7 +182,6 @@ class TaskFactoryTest {
         )
 
         assertTrue(result is CreateTaskResult.Success)
-
         if (result is CreateTaskResult.Success) {
             assertEquals(TaskPriority.HIGH, result.task.priority)
             assertEquals(TaskStatus.TODO, result.task.status)

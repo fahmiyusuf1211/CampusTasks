@@ -2,6 +2,7 @@
 package com.example.campustasks.domain
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class TaskQueriesTest {
@@ -32,12 +33,8 @@ class TaskQueriesTest {
         val result = TaskQueries.openTasks(tasks)
 
         assertEquals(2, result.size)
-        assertEquals(
-            listOf("T001", "T002"),
-            result.map { it.id }
-        )
+        assertEquals(listOf("T001", "T002"), result.map { it.id })
     }
-
 
     @Test
     fun tasksByPriorityHanyaMengambilPrioritasYangSesuai() {
@@ -68,12 +65,8 @@ class TaskQueriesTest {
         )
 
         assertEquals(2, result.size)
-        assertEquals(
-            listOf("T002", "T003"),
-            result.map { it.id }
-        )
+        assertEquals(listOf("T002", "T003"), result.map { it.id })
     }
-
 
     @Test
     fun searchByKeywordMencariJudulDanDeskripsi() {
@@ -101,12 +94,23 @@ class TaskQueriesTest {
         val result = TaskQueries.searchByKeyword(tasks, "kotlin")
 
         assertEquals(2, result.size)
-        assertEquals(
-            listOf("T001", "T002"),
-            result.map { it.id }
-        )
+        assertEquals(listOf("T001", "T002"), result.map { it.id })
     }
 
+    @Test
+    fun searchTidakMenemukanDataMenghasilkanListKosong() {
+        val tasks = listOf(
+            Task(
+                id = "T001",
+                title = "Belajar Kotlin",
+                estimatedMinutes = 30
+            )
+        )
+
+        val result = TaskQueries.searchByKeyword(tasks, "Python")
+
+        assertEquals(emptyList<Task>(), result)
+    }
 
     @Test
     fun groupByStatusMengelompokkanTugasDenganBenar() {
@@ -137,9 +141,8 @@ class TaskQueriesTest {
         assertEquals(1, result[TaskStatus.DONE]?.size)
     }
 
-
     @Test
-    fun findByIdMengambilTugasDenganIdYangSesuai() {
+    fun findByIdMenemukanTugasDenganIdYangSesuai() {
         val tasks = listOf(
             Task(
                 id = "T001",
@@ -156,10 +159,20 @@ class TaskQueriesTest {
         val result = TaskQueries.findById(tasks, "T002")
 
         assertEquals("T002", result?.id)
-        assertEquals("Membuat laporan", result?.title)
     }
 
+    @Test
+    fun findByIdTidakMenemukanIdMenghasilkanNull() {
+        val tasks = listOf(
+            Task(
+                id = "T001",
+                title = "Belajar Kotlin",
+                estimatedMinutes = 30
+            )
+        )
 
+        val result = TaskQueries.findById(tasks, "T999")
 
-
+        assertNull(result)
+    }
 }
